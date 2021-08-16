@@ -1,0 +1,7 @@
+{
+  "name": "appRiegoIonic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

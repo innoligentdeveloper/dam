@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title *ngIf="esLog==false">Tabla de Mediciones</ion-title>
+        <ion-title *ngIf="esLog==true">Listado de Logs</ion-title>
+        <ion-button slot="end" (click)="dismiss()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-grid *ngIf="esLog==false">
+        <ion-row class="header-row">
+            <ion-col>
+                Id
+            </ion-col>
+            <ion-col>
+                Fecha
+            </ion-col>
+            <ion-col>
+                Valor
+            </ion-col>
+            <ion-col>
+                Dispositivo Id
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let dato of datos">
+            <ion-col>
+                {{ dato.medicionId }}
+            </ion-col>
+            <ion-col>
+                {{ dato.fecha|date:'short':'es-AR' }}
+            </ion-col>
+            <ion-col>
+                {{ dato.valor }}
+            </ion-col>
+            <ion-col>
+                {{ dato.dispositivoId }}
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-list *ngIf="esLog==true">
+        <div *ngIf="datos.length!=0">
+            <ion-item *ngFor="let dato of datos">
+                <ion-label>
+                    <h2>Fecha: {{ dato.fecha|date:'short':'es-AR' }} - Apertura: {{ dato.apertura | abiertacerrada }} </h2>
+                </ion-label>
+            </ion-item>
+        </div>
+        <div *ngIf="datos.length==0">
+            <ion-item>
+                <ion-label>
+                    <h2>No hay registros. </h2>
+                </ion-label>
+            </ion-item>
+        </div>
+    </ion-list>
+</ion-content>
