@@ -153,28 +153,28 @@ En el código se podrán observar todos los métodos encargados de guardar los d
 Como vimos anteriormente en la instalación, se utiliza una base de datos MySQL que consta de cuatro tablas llamadas `Dispositivos`, `Electrovalvulas`, `Log_Riegos` y `Mediciones`.
 Cada una con los siguientes campos:
 
-Tabla Dispositivos: (
+Tabla Dispositivos:
   `dispositivoId` int(11) NOT NULL,
   `nombre` varchar(200) DEFAULT NULL,
   `ubicacion` varchar(200) DEFAULT NULL,
   `electrovalvulaId` int(11) NOT NULL
-)
-Tabla Electrovalvulas: (
+
+Tabla Electrovalvulas: 
   `electrovalvulaId` int(11) NOT NULL,
   `nombre` varchar(45) DEFAULT NULL
-) 
-Tabla Log_Riegos: (
+
+Tabla Log_Riegos: 
   `logRiegoId` int(11) NOT NULL,
   `apertura` tinyint(4) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `electrovalvulaId` int(11) NOT NULL
-) 
-Tabla Mediciones: (
+
+Tabla Mediciones: 
   `medicionId` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
   `valor` varchar(100) DEFAULT NULL,
   `dispositivoId` int(11) NOT NULL
-) 
+
 
 Con las siguientes relaciones entre tablas:
 Indices de la tabla `Dispositivos`:
