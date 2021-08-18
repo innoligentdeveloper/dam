@@ -1,8 +1,6 @@
-![header](doc/header.png)
-
 Bienvenidos a nuestro repositorio de código!!!
 En este caso, nos encontramos realizando un trabajo práctico para la Especialización en IoT de la Universidad de Buenos Aires.
-A través de estas líneas de código podrás levantar una página web para el monitoreo de una Casa Inteligente.
+A través de estas líneas de código podrás levantar una página web para el monitoreo de una Aplicaciòn de Riego.
 Sin más preámbulos, los dejamos con la guía de instalación y puesta en marcha.
 
 Indice de contenidos:
@@ -16,9 +14,10 @@ Indice de contenidos:
 Para la instalación necesitaremos ejecutar los comandos que se describen a continuación para cada una de las correspondientes tareas.
 
 Descargar del siguiente repositorio los archivos de la aplicación web y copiarlos en una carpeta de su preferencia.
-https://github.com/innoligentdeveloper/app-fullstack-base.git
+https://github.com/innoligentdeveloper/dam.git
 
-En nuestro caso los copiaremos a modo de ejemplo en 'cd /home/usuario/app-fullstack-base'. Donde 'usuario' debe reemplazarse por el nombre de usuario correspondiente de la terminal linux.
+Dentro de esos archivos descargados encontraremos la carpeta /appRiegoIonic. Esta carpeta es la que utilizaremos para este pràctico.
+En nuestro caso la copiaremos a modo de ejemplo en 'cd /home/usuario/appRiegoIonic'. Donde 'usuario' debe reemplazarse por el nombre de usuario correspondiente de la terminal linux.
 
 Instalación de Docker:
 
@@ -83,7 +82,7 @@ docker pull mysql:5.7
 docker pull phpmyadmin/phpmyadmin
 docker pull abassi/nodejs-server:10.0-dev
 ```
-Una vez finalizada la descarga, se deberá levantar el servicio de docker desde la ruta de la carpeta del fork, por ejemplo 'cd /home/usuario/app-fullstack-base'.
+Una vez finalizada la descarga, se deberá levantar el servicio de docker desde la ruta de la carpeta del fork, por ejemplo 'cd /home/usuario/appRiegoIonic'.
 
 ```sh
 docker-compose up
@@ -117,54 +116,82 @@ docker-compose restart
 # Frontend
 Una vez realizada la instalación anterior, ingrese desde un navegador de internet a la url: http://localhost:8000 para visualizar la página web.
 
-Para el frontend del sistema se utilizó el framework CSS de Materialize (https://materializecss.com)
+Para el frontend del sistema se utilizó el framework Ionic (https://ionicframework.com/)
 Para la programación se utilizó Typescript y HTML.
 
-La funcionalidad del sistema es administrar (ABM) una lista de dispositivos eléctricos de una casa inteligente.
-Se pueden agregar dispositivos nuevos, modificar existentes y eliminarlos.
-El sistema permite la carga de 2 tipos de dispositivos, dispositivos de accionamiento tipo interruptor y dispositivos dimmer.
+La funcionalidad del sistema es visualizar la información de los distintos sensores de riego, además de poder encender y apagar la electroválvula para irrigar el sistema. Para cada sensor se puede visualizar la historia de encendido y apagado de la electroválvula, como así también visualizar los valores de irrigación en vivo e históricos.
 
-En la siguiente figura se muestra la página inicial con algunos dispositivos y el botón para agregar uno nuevo.
-![frontend](doc/domotica.png)
+En este caso no es necesario instalar Ionic dado que ya está hecho el build y copiado en la carpeta /src/frontend/www/
 
-En la siguiente figura se muestra la página al ingresar un nuevo dispositivo.
-![frontend](doc/modalinsert.png)
+Si se deseara modificar el código Ionic se debe instalar Ionic y utilizar el código que se encuentra en la carpeta /app_IONIC_RIEGO_DESARROLLO. 
 
-En la figura se muestra la página al editar un dispositivo existente.
-![frontend](doc/modaledit.png)
+Para instalar Ionic debe seguir los siguientes pasos desde la consola.
 
-También se puede realizar el dimerizado o el encendido y apagado de cada dispositivo. Dicho cambio impacta directamente en la base de datos.
+```sh 
+npm install -g @ionic/cli
+```
+Si desea modificar la app, ingrese a la carpeta de la misma y encienda el server de ionic:
+```sh 
+cd /app_IONIC_RIEGO_DESARROLLO
+ionic serve
+```
+Ahora puede modificar el código e ir viendo los cambios en la web.
 
-En un futuro, ese cambio impactará en los dispositivos reales. Para esto, será necesario agregar campos a la base de datos y nuevos procedimientos del lado del servidor.
-
-Dentro del código del programa se pueden ver las notas de documentación sobre qué es lo que hace cada pedacito de código en particular.
-
-En la figura se muestra un ejemplo de estas notas sobre la funcionalidad del código en cada caso.
-![frontend](doc/docucode.png)
-
+Una vez finalizadas las modificaciones, se debe hacer el build de la aplicaciòn.
+```sh 
+ionic build
+```
+Ahora hay que proceder a borrar todo el contenido existente en /src/frontend/www.
+Finalmente, proceder a copiar toda la carpeta /www en el /src/frontend/www
 
 # Backend
-En el lado del backend se programaron las llamadas a la base de datos para que se inserten, actualicen y borren los datos de los dispositivos. También se realiza el envío de la respuesta al frontend con los datos necesarios en formato JSON.
+En el lado del backend se programaron las llamadas a la base de datos para que se inserten y actualicen los datos de los sensores. También se realiza el envío de la respuesta al frontend con los datos necesarios en formato JSON.
 
 En el código se podrán observar todos los métodos encargados de guardar los datos provenientes del frontend.
-Se optó por utilizar solo recepción de métodos por POST y no GET, debido a que en el POST los datos viajan ocultos en el body. Para los métodos POST, se recojen los datos desde el objeto `req.body`.
-
-Dentro del código del programa del backend se optó por la misma metodología de documentación a través de notas sobre qué es lo que hace cada pedacito de código en particular.
 
 # Base de datos
-Como vimos anteriormente en la instalación, se utiliza una base de datos MySQL que consta de una tabla llamada `Devices` con la siguiente estructura:
-- `id` int(11) NOT NULL
-- `name` varchar(64) NOT NULL
-- `description` varchar(128) NOT NULL
-- `state` int(11) NOT NULL
-- `type` int(11) NOT NULL
+Como vimos anteriormente en la instalación, se utiliza una base de datos MySQL que consta de cuatro tablas llamadas `Dispositivos`, `Electrovalvulas`, `Log_Riegos` y `Mediciones`.
+Cada una con los siguientes campos:
 
-El campo `id` se utiliza como clave primaria. 
+Tabla Dispositivos: (
+  `dispositivoId` int(11) NOT NULL,
+  `nombre` varchar(200) DEFAULT NULL,
+  `ubicacion` varchar(200) DEFAULT NULL,
+  `electrovalvulaId` int(11) NOT NULL
+)
+Tabla Electrovalvulas: (
+  `electrovalvulaId` int(11) NOT NULL,
+  `nombre` varchar(45) DEFAULT NULL
+) 
+Tabla Log_Riegos: (
+  `logRiegoId` int(11) NOT NULL,
+  `apertura` tinyint(4) DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `electrovalvulaId` int(11) NOT NULL
+) 
+Tabla Mediciones: (
+  `medicionId` int(11) NOT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `valor` varchar(100) DEFAULT NULL,
+  `dispositivoId` int(11) NOT NULL
+) 
 
-El campo `state` almacena el estado del dispositivo, si es encendido y apagado utilizará los valores 1 y 0, respectivamente. En cambio para el tipo dimmer el valor del estado puede variar desde 0 a 100.
+Con las siguientes relaciones entre tablas:
+Indices de la tabla `Dispositivos`:
+  ADD PRIMARY KEY (`dispositivoId`,`electrovalvulaId`),
+  ADD KEY `fk_Dispositivos_Electrovalvulas1_idx` (`electrovalvulaId`);
 
-El campo `type` en 0 indica interruptor y en 1 indica dimmer.
+Indices de la tabla `Electrovalvulas`:
+  ADD PRIMARY KEY (`electrovalvulaId`);
 
+Indices de la tabla `Log_Riegos`:
+  ADD PRIMARY KEY (`logRiegoId`,`electrovalvulaId`),
+  ADD KEY `fk_Log_Riegos_Electrovalvulas1_idx` (`electrovalvulaId`);
+
+Indices de la tabla `Mediciones`:
+  ADD PRIMARY KEY (`medicionId`,`dispositivoId`),
+  ADD KEY `fk_Mediciones_Dispositivos_idx` (`dispositivoId`);
+  
 Para acceder al administrador de base de datos phpmyadmin, ingrese desde un navegador de internet a la url http://localhost:8001 con usuario 'root' y contraseña 'userpass'.
 
 # Licencia
