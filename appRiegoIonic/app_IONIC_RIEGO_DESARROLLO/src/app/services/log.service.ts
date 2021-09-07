@@ -6,7 +6,7 @@ import { Logs } from '../model/Logs';
   providedIn: 'root'
 })
 export class LogService {
-  urlApi="http://localhost:8000/home";
+  urlApi="https://www.app.innoligent.com.ar/home";
   constructor(private _http: HttpClient ) {
    }
   getLogsByIdElectrovalvula(id):Promise<Logs[]>{     

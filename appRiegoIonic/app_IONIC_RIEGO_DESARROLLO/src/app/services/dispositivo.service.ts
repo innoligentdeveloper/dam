@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class DispositivoService {
-  urlApi="http://localhost:8000/home";
+  urlApi="https://www.app.innoligent.com.ar/home";
 
   constructor(private _http: HttpClient ) {
    }

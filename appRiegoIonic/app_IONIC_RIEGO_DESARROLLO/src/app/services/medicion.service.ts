@@ -6,7 +6,7 @@ import { Medicion } from '../model/Medicion'
   providedIn: 'root'
 })
 export class MedicionService {
-  urlApi="http://localhost:8000/home";
+  urlApi="https://www.app.innoligent.com.ar/home";
   constructor(private _http: HttpClient ) {
    }
 

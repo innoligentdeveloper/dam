@@ -10,7 +10,6 @@ app.use(express.json());
 
 
 app.use('/home/api/dispositivo', routerDisp);
-
 app.use('/home/api/medicion', routerMedicion);
 app.use('/home/api/logs', routerLogs);
 
